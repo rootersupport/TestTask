@@ -22,11 +22,9 @@ namespace TestTask.Models
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
         public int UserGroupId { get; set; }
-
         public UserGroup UserGroup { get; set; }
 
         public int UserStateId { get; set; }
-
         public UserState UserState { get; set; }
     }
 }

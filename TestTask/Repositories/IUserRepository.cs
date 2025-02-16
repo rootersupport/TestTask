@@ -11,5 +11,6 @@ namespace TestTask.Repositories
         Task AddUserAsync(User user);
         Task UpdateUserAsync(User user);
         Task DeleteUserAsync(int id);
+        Task<User> GetUserByLoginAsync(string login);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TestTask.Models;
@@ -6,8 +7,9 @@ using TestTask.Services;
 
 namespace TestTask.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -17,7 +19,8 @@ namespace TestTask.Controllers
             _userService = userService;
         }
 
-        [HttpGet] //Чтение всех
+        [HttpGet]
+        [Authorize(Policy = "AdminOnly")] // Только для администраторов
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
@@ -27,14 +30,15 @@ namespace TestTask.Controllers
                 Login = u.Login,
                 Password = u.Password,
                 CreatedDate = u.CreatedDate,
-                UserGroup = u.UserGroup.Code, // Code из UserGroup
-                UserState = u.UserState.Code  // Code из UserState
+                UserGroup = u.UserGroup.Code,
+                UserState = u.UserState.Code
             }).ToList();
 
             return Ok(response);
         }
 
         [HttpGet("{id}")] //Чтение по id
+        [Authorize] // Доступно всем
         public async Task<ActionResult<UserResponse>> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -57,6 +61,7 @@ namespace TestTask.Controllers
         }
 
         [HttpPost] //Добавление
+        [Authorize(Policy = "AdminOnly")] // Только для администраторов
         public async Task<ActionResult<UserResponse>> AddUser([FromBody] UserCreateRequest request)
         {
             var user = new User
@@ -77,8 +82,8 @@ namespace TestTask.Controllers
                     Login = user.Login,
                     Password = user.Password,
                     CreatedDate = user.CreatedDate,
-                    UserGroupId = user.UserGroupId, // UserGroup
-                    UserStateId = user.UserStateId // UserState
+                    UserGroupId = user.UserGroupId,
+                    UserStateId = user.UserStateId
                 };
                 return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, response);
             }
@@ -88,8 +93,8 @@ namespace TestTask.Controllers
             }
         }
 
-
         [HttpPut("{id}")] //Редактирование
+        [Authorize(Policy = "AdminOnly")] // Только для администраторов
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateRequest request)
         {
             var user = await _userService.GetUserByIdAsync(id);
@@ -116,6 +121,7 @@ namespace TestTask.Controllers
         }
 
         [HttpDelete("{id}")] //Удаление (блок)
+        [Authorize(Policy = "AdminOnly")] // Только для администраторов
         public async Task<IActionResult> DeleteUser(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);

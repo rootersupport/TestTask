@@ -38,5 +38,32 @@ namespace TestTask.Services
         {
             await _userRepository.DeleteUserAsync(id);
         }
+        public async Task<User> AuthenticateAsync(string login, string password)
+        {
+            var user = await _userRepository.GetUserByLoginAsync(login);
+
+            if (user == null || user.Password != password)
+            {
+                return null;
+            }
+            // Проверка блока
+            if (user.UserState.Code == "Blocked")
+            {
+                throw new InvalidOperationException("Пользователь заблокирован.");
+            }
+
+            return user;
+        }
+        //public async Task<User> AuthenticateAsync(string login, string password)
+        //{
+        //    var user = await _userRepository.GetUserByLoginAsync(login);
+
+        //    if (user == null || user.Password != password)
+        //    {
+        //        return null;
+        //    }
+
+        //    return user;
+        //}
     }
 }

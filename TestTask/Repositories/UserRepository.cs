@@ -92,5 +92,12 @@ namespace TestTask.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<User> GetUserByLoginAsync(string login)
+        {
+            return await _context.Users
+                .Include(u => u.UserGroup)
+                .Include(u => u.UserState)
+                .FirstOrDefaultAsync(u => u.Login == login);
+        }
     }
 }
