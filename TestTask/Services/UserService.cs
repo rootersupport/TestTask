@@ -54,16 +54,5 @@ namespace TestTask.Services
 
             return user;
         }
-        //public async Task<User> AuthenticateAsync(string login, string password)
-        //{
-        //    var user = await _userRepository.GetUserByLoginAsync(login);
-
-        //    if (user == null || user.Password != password)
-        //    {
-        //        return null;
-        //    }
-
-        //    return user;
-        //}
     }
 }

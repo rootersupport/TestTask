@@ -9,14 +9,14 @@ using TestTask.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Регистрация контроллеров
+// Рег контроллеров
 builder.Services.AddControllers();
 
-// Регистрация контекста базы данных
+// Рег контекста базы данных
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Регистрация репозиториев и сервисов
+// Рег репозиториев и сервисов
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -50,7 +50,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "TestTask API", Version = "v1" });
 
-    // Добавление поддержки JWT в Swagger
+    // JWT
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Authorization example: Bearer {token}",
@@ -78,7 +78,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Настройка Swagger
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -97,38 +97,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-//using Microsoft.EntityFrameworkCore;
-//using TestTask.Data;
-//using TestTask.Repositories;
-//using TestTask.Services;
-
-//var builder = WebApplication.CreateBuilder(args);
-
-//// Рег контроллеров
-//builder.Services.AddControllers(); 
-
-//// Рег контекста
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-//// Рег репозиториев и сервисов
-//builder.Services.AddScoped<IUserRepository, UserRepository>();
-//builder.Services.AddScoped<IUserService, UserService>();
-
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
-
-//var app = builder.Build();
-
-//// Swagger
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
-
-//app.UseHttpsRedirection();
-
-//app.MapControllers();
-
-//app.Run();
